@@ -1,0 +1,26 @@
+CREATE TABLE payment_method_config(
+  methodId TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  enabled INTEGER NOT NULL DEFAULT 1,
+  configData TEXT
+);
+
+selectAll:
+SELECT * FROM payment_method_config;
+
+selectById:
+SELECT * FROM payment_method_config WHERE methodId = ?;
+
+insertOrUpdate:
+INSERT OR REPLACE INTO payment_method_config(methodId, name, type, enabled, configData)
+VALUES (?, ?, ?, ?, ?);
+
+updateEnabled:
+UPDATE payment_method_config SET enabled = ? WHERE methodId = ?;
+
+deleteById:
+DELETE FROM payment_method_config WHERE methodId = ?;
+
+exportAllPaymentMethods:
+SELECT * FROM payment_method_config;

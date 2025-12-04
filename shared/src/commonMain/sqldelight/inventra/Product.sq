@@ -1,0 +1,38 @@
+CREATE TABLE product(
+  productId TEXT NOT NULL PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  image TEXT,
+  skuCode TEXT,
+  barcode TEXT
+);
+
+selectAllProducts:
+SELECT * FROM product;
+
+selectProductById:
+SELECT * FROM product WHERE productId = ?;
+
+insertProduct:
+INSERT INTO product (productId, title, description, image, skuCode, barcode)
+VALUES (?, ?, ?, ?, ?, ?);
+
+updateProduct:
+UPDATE product
+SET title = ?, description = ?, image = ?, skuCode = ?, barcode = ?
+WHERE productId = ?;
+
+deleteProduct:
+DELETE FROM product WHERE productId = ?;
+
+searchByTitle:
+SELECT * FROM product WHERE title LIKE ?;
+
+countByBarcode:
+SELECT COUNT(*) FROM product WHERE barcode = ?;
+
+countBySkuCode:
+SELECT COUNT(*) FROM product WHERE skuCode = ?;
+
+exportAllProductsWithDetails:
+SELECT * FROM product;

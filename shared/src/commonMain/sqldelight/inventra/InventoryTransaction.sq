@@ -1,0 +1,31 @@
+CREATE TABLE inventory_transaction(
+  transactionId TEXT NOT NULL PRIMARY KEY,
+  offerId TEXT NOT NULL,
+  changeAmount INTEGER NOT NULL,
+  reason TEXT NOT NULL,
+  timestamp TEXT NOT NULL,
+  eventId TEXT,
+  FOREIGN KEY(offerId) REFERENCES offer(offerId) ON DELETE CASCADE
+);
+
+selectTransactionsForOffer:
+SELECT * FROM inventory_transaction WHERE offerId = ? ORDER BY timestamp DESC;
+
+selectAll:
+SELECT * FROM inventory_transaction ORDER BY timestamp DESC;
+
+selectById:
+SELECT * FROM inventory_transaction WHERE transactionId = ?;
+
+insertTransaction:
+INSERT OR REPLACE INTO inventory_transaction(transactionId, offerId, changeAmount, reason, timestamp, eventId)
+VALUES (?, ?, ?, ?, ?, ?);
+
+deleteTransaction:
+DELETE FROM inventory_transaction WHERE transactionId = ?;
+
+deleteAll:
+DELETE FROM inventory_transaction;
+
+exportAllTransactions:
+SELECT * FROM inventory_transaction;

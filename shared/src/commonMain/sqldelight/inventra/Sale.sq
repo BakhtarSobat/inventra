@@ -1,0 +1,67 @@
+CREATE TABLE sale(
+  saleId TEXT NOT NULL PRIMARY KEY,
+  timestamp TEXT NOT NULL,
+  eventId TEXT
+);
+
+CREATE TABLE sale_item(
+  saleId TEXT NOT NULL,
+  offerId TEXT NOT NULL,
+  description TEXT,
+  quantity INTEGER NOT NULL,
+  unitPrice REAL NOT NULL,
+  totalPrice REAL NOT NULL,
+  taxPercentage REAL NOT NULL,
+  inventoryAdjusted INTEGER NOT NULL,
+  FOREIGN KEY(saleId) REFERENCES sale(saleId) ON DELETE CASCADE,
+  FOREIGN KEY(offerId) REFERENCES offer(offerId)
+);
+
+CREATE TABLE payment_part(
+  saleId TEXT NOT NULL,
+  method TEXT NOT NULL,
+  amount REAL NOT NULL,
+  qrCodeData TEXT,
+  status TEXT NOT NULL,
+  note TEXT,
+  FOREIGN KEY(saleId) REFERENCES sale(saleId) ON DELETE CASCADE
+);
+
+selectSaleById:
+SELECT * FROM sale WHERE saleId = ?;
+
+selectSaleItems:
+SELECT * FROM sale_item WHERE saleId = ?;
+
+selectPaymentParts:
+SELECT * FROM payment_part WHERE saleId = ?;
+
+selectAll:
+SELECT * FROM sale ORDER BY timestamp DESC;
+
+insertSale:
+INSERT OR REPLACE INTO sale(saleId, timestamp, eventId)
+VALUES (?, ?, ?);
+
+insertSaleItem:
+INSERT OR REPLACE INTO sale_item(saleId, offerId, description, quantity, unitPrice, totalPrice, taxPercentage, inventoryAdjusted)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+insertPaymentPart:
+INSERT OR REPLACE INTO payment_part(saleId, method, amount, qrCodeData, status, note)
+VALUES (?, ?, ?, ?, ?, ?);
+
+deleteSale:
+DELETE FROM sale WHERE saleId = ?;
+
+deleteAllSales:
+DELETE FROM sale;
+
+exportAllSales:
+SELECT * FROM sale;
+
+exportAllSaleItems:
+SELECT * FROM sale_item;
+
+exportAllPaymentParts:
+SELECT * FROM payment_part;

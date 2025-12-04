@@ -1,0 +1,36 @@
+CREATE TABLE category_product(
+  categoryId TEXT NOT NULL,
+  productId TEXT NOT NULL,
+  PRIMARY KEY(categoryId, productId),
+  FOREIGN KEY(categoryId) REFERENCES category(categoryId) ON DELETE CASCADE,
+  FOREIGN KEY(productId) REFERENCES product(productId) ON DELETE CASCADE
+);
+
+selectCategoriesForProduct:
+SELECT c.* FROM category c
+JOIN category_product cp ON c.categoryId = cp.categoryId
+WHERE cp.productId = ?;
+
+selectProductsForCategory:
+SELECT p.* FROM product p
+JOIN category_product cp ON p.productId = cp.productId
+WHERE cp.categoryId = ?;
+
+insertCategoryProduct:
+INSERT INTO category_product (categoryId, productId) VALUES (?, ?);
+
+deleteCategoryProduct:
+DELETE FROM category_product WHERE categoryId = ? AND productId = ?;
+
+deleteCategoryProductsByCategory:
+DELETE FROM category_product WHERE categoryId = ?;
+
+deleteCategoryProductsByProduct:
+DELETE FROM category_product WHERE productId = ?;
+
+countCategoriesForProduct:
+SELECT COUNT(*) FROM category_product WHERE productId = ?;
+
+exportAllCategoryProducts:
+SELECT * FROM category_product;
+

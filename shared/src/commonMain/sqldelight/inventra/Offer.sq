@@ -1,0 +1,45 @@
+CREATE TABLE offer(
+  offerId TEXT NOT NULL PRIMARY KEY,
+  productId TEXT NOT NULL,
+  title TEXT NOT NULL,
+  image TEXT,
+  amountInInventory INTEGER NOT NULL,
+  type TEXT NOT NULL,
+  price REAL NOT NULL,
+  uom TEXT NOT NULL,
+  taxPercentage REAL NOT NULL,
+  FOREIGN KEY(productId) REFERENCES product(productId) ON DELETE CASCADE
+);
+
+selectOffersByProduct:
+SELECT * FROM offer WHERE productId = ?;
+
+selectOfferById:
+SELECT * FROM offer WHERE offerId = ?;
+
+selectAllOffers:
+SELECT * FROM offer;
+
+selectLowStockOffers:
+SELECT * FROM offer WHERE amountInInventory <= ?;
+
+insertOffer:
+INSERT INTO offer (offerId, productId, title, image, amountInInventory, type, price, uom, taxPercentage)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateOffer:
+UPDATE offer
+SET title = ?, image = ?, amountInInventory = ?, type = ?, price = ?, uom = ?, taxPercentage = ?
+WHERE offerId = ?;
+
+updateInventory:
+UPDATE offer SET amountInInventory = ? WHERE offerId = ?;
+
+deleteOffer:
+DELETE FROM offer WHERE offerId = ?;
+
+searchOffers:
+SELECT * FROM offer WHERE title LIKE ?;
+
+exportAllOffersWithDetails:
+SELECT * FROM offer;

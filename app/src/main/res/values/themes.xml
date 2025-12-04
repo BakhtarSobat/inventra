@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.Inventra" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize colors or typography here if needed -->
+    </style>
+</resources>

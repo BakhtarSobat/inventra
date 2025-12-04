@@ -1,0 +1,1 @@
+ALTER TABLE sale_item ADD COLUMN description TEXT;

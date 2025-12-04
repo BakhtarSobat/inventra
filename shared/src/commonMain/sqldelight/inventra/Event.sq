@@ -1,0 +1,20 @@
+CREATE TABLE event(
+  eventId TEXT NOT NULL PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  startDate TEXT NOT NULL,
+  endDate TEXT NOT NULL
+);
+
+selectAllEvents:
+SELECT * FROM event ORDER BY startDate DESC;
+
+selectEventById:
+SELECT * FROM event WHERE eventId = ?;
+
+exportAllEvents:
+SELECT * FROM event;
+
+insertEvent:
+INSERT INTO event(eventId, title, description, startDate, endDate)
+VALUES (?, ?, ?, ?, ?);

@@ -1,0 +1,28 @@
+CREATE TABLE category (
+  categoryId TEXT NOT NULL PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  image TEXT,
+  taxPercentage REAL NOT NULL
+);
+
+selectAllCategories:
+SELECT * FROM category;
+
+selectCategoryById:
+SELECT * FROM category WHERE categoryId = ?;
+
+insertCategory:
+INSERT INTO category (categoryId, title, description, image, taxPercentage)
+VALUES (?, ?, ?, ?, ?);
+
+updateCategory:
+UPDATE category
+SET title = ?, description = ?, image = ?, taxPercentage = ?
+WHERE categoryId = ?;
+
+deleteCategory:
+DELETE FROM category WHERE categoryId = ?;
+
+exportAllCategories:
+SELECT * FROM category;

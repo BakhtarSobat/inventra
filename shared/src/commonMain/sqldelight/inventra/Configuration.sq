@@ -1,0 +1,24 @@
+CREATE TABLE configuration (
+    key TEXT NOT NULL PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+insertOrReplaceConfig:
+INSERT OR REPLACE INTO configuration(
+    key,
+    value
+) VALUES (?, ?);
+
+deleteConfig:
+DELETE FROM configuration
+WHERE key = ?;
+
+configByKey:
+SELECT *
+FROM configuration
+WHERE key = ?;
+
+allConfig:
+SELECT *
+FROM configuration
+ORDER BY key;
