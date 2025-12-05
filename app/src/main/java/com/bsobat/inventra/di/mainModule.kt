@@ -5,7 +5,6 @@ import com.bsobat.inventra.ui.MainActivityViewModel
 import com.bsobat.inventra.ui.basket.BasketViewModel
 import com.bsobat.inventra.ui.categories.CategoryViewModel
 import com.bsobat.inventra.ui.checkout.CheckoutViewModel
-import com.bsobat.inventra.ui.config.ConfigurationScreen
 import com.bsobat.inventra.ui.config.ConfigurationViewModel
 import com.bsobat.inventra.ui.offer.OfferViewModel
 import com.bsobat.inventra.ui.products.ProductsViewModel
@@ -26,6 +25,8 @@ val mainModule = module {
             updateCompanyDescriptionUseCase = get(),
             observeEventNameUseCase = get(),
             updateEventNameUseCase = get(),
+            observePincodeUseCase = get(),
+            updatePincodeUseCase = get(),
             contextProvider = get()
         )
     }

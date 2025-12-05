@@ -6,9 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.bsobat.inventra.basket.usecase.AddBasketItemUseCase
 import com.bsobat.inventra.data.di.ContextProvider
 import com.bsobat.inventra.data.di.PathProvider
-import com.bsobat.inventra.data.model.Category
 import com.bsobat.inventra.data.model.Offer
-import com.bsobat.inventra.data.model.Product
 import com.bsobat.inventra.domain.usecase.AdminPinCheckUseCase
 import com.bsobat.inventra.domain.usecase.copyImageToInternalStorageUseCase
 import com.bsobat.inventra.offer.domain.usecase.AddOfferUseCase
@@ -170,7 +168,11 @@ class OfferViewModel(
             "offer_${product.productId}.jpg"
         )
     }
-    fun onAdminPinCheck(pin: String) = adminPinCheckUseCase(pin)
+    fun onAdminPinCheck(pin: String){
+        viewModelScope.launch {
+            adminPinCheckUseCase(pin)
+        }
+    }
 
     fun clearSelectedOffer() {
         _selectedOffer.value = null

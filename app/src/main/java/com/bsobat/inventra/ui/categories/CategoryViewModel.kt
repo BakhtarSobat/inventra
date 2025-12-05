@@ -108,5 +108,9 @@ class CategoryViewModel(
         _uiState.value = CategoryUiState.Error(msg ?: "Unknown Error")
     }
 
-    fun onAdminPinCheck(pin: String)  = adminPinCheckUseCase(pin)
+    fun onAdminPinCheck(pin: String){
+        viewModelScope.launch {
+            adminPinCheckUseCase(pin)
+        }
+    }
 }

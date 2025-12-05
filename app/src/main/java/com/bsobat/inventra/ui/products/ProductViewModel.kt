@@ -135,7 +135,11 @@ class ProductsViewModel(
     }
 
 
-    fun onAdminPinCheck(pin: String) = adminPinCheckUseCase(pin)
+    fun onAdminPinCheck(pin: String){
+        viewModelScope.launch {
+            adminPinCheckUseCase(pin)
+        }
+    }
 
     fun clearPinError() {
         _pinError.value = false

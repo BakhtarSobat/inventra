@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -21,10 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bsobat.inventra.R
+import com.bsobat.inventra.config.usecase.Pincode
 import com.bsobat.inventra.ui.components.FullScreenLoading
 import com.bsobat.inventra.ui.components.PrimaryButton
 import com.bsobat.inventra.ui.components.SecondaryButton
@@ -50,6 +53,7 @@ fun ConfigurationScreen(
             onCompanyLogoChanged = viewModel::updateCompanyLogo,
             onCompanyDescriptionChanged = viewModel::updateCompanyDescription,
             onEventNameChanged = viewModel::updateEventName,
+            onPincodeChange = viewModel::updatePincode,
             onSave = {
                 viewModel.saveConfiguration()
             }
@@ -66,6 +70,7 @@ private fun ConfigurationContent(
     onCompanyLogoChanged: (Uri?) -> Unit,
     onCompanyDescriptionChanged: (String) -> Unit,
     onEventNameChanged: (String) -> Unit,
+    onPincodeChange: (Pincode)-> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(24.dp)
@@ -85,6 +90,14 @@ private fun ConfigurationContent(
             value = data.companyName,
             onValueChange = onCompanyNameChanged
         )
+        OutlinedTextField(
+            value = data.pincode?.value.orEmpty(),
+            onValueChange = { onPincodeChange(Pincode(it)) },
+            label = { com.bsobat.inventra.ui.components.Text(stringResource(R.string.pin)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+
         Text(
             text = stringResource(R.string.label_company_logo)
         )
@@ -160,6 +173,7 @@ private fun ErrorContent(
 private fun ConfigurationContentPreview() {
     ConfigurationContent(
         data = ConfigurationData(
+            pincode = Pincode("1234"),
             companyName = "Inventra Inc.",
             companyLogo = "https://example.com/logo.png",
             companyDescription = "Retail POS system powering on-site events.",
@@ -169,6 +183,7 @@ private fun ConfigurationContentPreview() {
         onCompanyLogoChanged = {},
         onCompanyDescriptionChanged = {},
         onEventNameChanged = {},
+        onPincodeChange = {},
         onSave = {}
     )
 }

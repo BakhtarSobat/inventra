@@ -196,7 +196,9 @@ class CheckoutViewModel(
     }
 
     fun onAdminPinCheck(pin: String) {
-        adminPinCheckUseCase(pin)
+        viewModelScope.launch {
+            adminPinCheckUseCase(pin)
+        }
     }
 
     fun deletePaymentMethod(payment: PaymentMethod) {

@@ -5,11 +5,14 @@ import com.bsobat.inventra.config.usecase.ObserveCompanyDescriptionUseCase
 import com.bsobat.inventra.config.usecase.ObserveCompanyLogoUseCase
 import com.bsobat.inventra.config.usecase.ObserveCompanyNameUseCase
 import com.bsobat.inventra.config.usecase.ObserveEventNameUseCase
+import com.bsobat.inventra.config.usecase.ObservePincodeUseCase
 import com.bsobat.inventra.config.usecase.UpdateCompanyDescriptionUseCase
 import com.bsobat.inventra.config.usecase.UpdateCompanyLogoUseCase
 import com.bsobat.inventra.config.usecase.UpdateCompanyNameUseCase
 import com.bsobat.inventra.config.usecase.UpdateEventNameUseCase
+import com.bsobat.inventra.config.usecase.UpdatePincodeUseCase
 import com.bsobat.inventra.data.di.ContextProvider
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -17,7 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -31,9 +33,11 @@ class ConfigurationViewModelTest {
 
     private lateinit var observeCompanyNameUseCase: ObserveCompanyNameUseCase
     private lateinit var observeCompanyLogoUseCase: ObserveCompanyLogoUseCase
+    private lateinit var observePincodeUseCase: ObservePincodeUseCase
     private lateinit var observeCompanyDescriptionUseCase: ObserveCompanyDescriptionUseCase
     private lateinit var observeEventNameUseCase: ObserveEventNameUseCase
     private lateinit var updateCompanyNameUseCase: UpdateCompanyNameUseCase
+    private lateinit var updatePincodeUseCase: UpdatePincodeUseCase
     private lateinit var updateCompanyLogoUseCase: UpdateCompanyLogoUseCase
     private lateinit var updateCompanyDescriptionUseCase: UpdateCompanyDescriptionUseCase
     private lateinit var updateEventNameUseCase: UpdateEventNameUseCase
@@ -53,6 +57,8 @@ class ConfigurationViewModelTest {
         updateCompanyLogoUseCase = mockk(relaxed = true)
         updateCompanyDescriptionUseCase = mockk(relaxed = true)
         updateEventNameUseCase = mockk(relaxed = true)
+        observePincodeUseCase = mockk()
+        updatePincodeUseCase = mockk(relaxed = true)
         contextProvider = mockk()
     }
 
@@ -67,16 +73,19 @@ class ConfigurationViewModelTest {
         every { observeCompanyLogoUseCase() } returns flowOf("logo.jpg")
         every { observeCompanyDescriptionUseCase() } returns flowOf("Test Description")
         every { observeEventNameUseCase() } returns flowOf("Test Event")
+        coEvery { observePincodeUseCase() } returns flowOf(null)
 
         viewModel = ConfigurationViewModel(
             observeCompanyNameUseCase,
             observeCompanyLogoUseCase,
             observeCompanyDescriptionUseCase,
             observeEventNameUseCase,
+            observePincodeUseCase,
             updateCompanyNameUseCase,
             updateCompanyLogoUseCase,
             updateCompanyDescriptionUseCase,
             updateEventNameUseCase,
+            updatePincodeUseCase,
             contextProvider
         )
 
@@ -84,7 +93,8 @@ class ConfigurationViewModelTest {
             companyName = "Test Company",
             companyLogo = "logo.jpg",
             companyDescription = "Test Description",
-            eventName = "Test Event"
+            eventName = "Test Event",
+            pincode = null
         )
 
         viewModel.uiState.test {
@@ -98,16 +108,19 @@ class ConfigurationViewModelTest {
         every { observeCompanyLogoUseCase() } returns flowOf(null)
         every { observeCompanyDescriptionUseCase() } returns flowOf("")
         every { observeEventNameUseCase() } returns flowOf("")
+        coEvery { observePincodeUseCase() } returns flowOf(null)
 
         viewModel = ConfigurationViewModel(
             observeCompanyNameUseCase,
             observeCompanyLogoUseCase,
             observeCompanyDescriptionUseCase,
             observeEventNameUseCase,
+            observePincodeUseCase,
             updateCompanyNameUseCase,
             updateCompanyLogoUseCase,
             updateCompanyDescriptionUseCase,
             updateEventNameUseCase,
+            updatePincodeUseCase,
             contextProvider
         )
 
@@ -122,16 +135,19 @@ class ConfigurationViewModelTest {
         every { observeCompanyLogoUseCase() } returns flowOf(null)
         every { observeCompanyDescriptionUseCase() } returns flowOf("")
         every { observeEventNameUseCase() } returns flowOf("")
+        coEvery { observePincodeUseCase() } returns flowOf(null)
 
         viewModel = ConfigurationViewModel(
             observeCompanyNameUseCase,
             observeCompanyLogoUseCase,
             observeCompanyDescriptionUseCase,
             observeEventNameUseCase,
+            observePincodeUseCase,
             updateCompanyNameUseCase,
             updateCompanyLogoUseCase,
             updateCompanyDescriptionUseCase,
             updateEventNameUseCase,
+            updatePincodeUseCase,
             contextProvider
         )
 
@@ -146,16 +162,19 @@ class ConfigurationViewModelTest {
         every { observeCompanyLogoUseCase() } returns flowOf(null)
         every { observeCompanyDescriptionUseCase() } returns flowOf("")
         every { observeEventNameUseCase() } returns flowOf("")
+        coEvery { observePincodeUseCase() } returns flowOf(null)
 
         viewModel = ConfigurationViewModel(
             observeCompanyNameUseCase,
             observeCompanyLogoUseCase,
             observeCompanyDescriptionUseCase,
             observeEventNameUseCase,
+            observePincodeUseCase,
             updateCompanyNameUseCase,
             updateCompanyLogoUseCase,
             updateCompanyDescriptionUseCase,
             updateEventNameUseCase,
+            updatePincodeUseCase,
             contextProvider
         )
 
@@ -170,16 +189,19 @@ class ConfigurationViewModelTest {
         every { observeCompanyLogoUseCase() } returns flowOf("logo.jpg")
         every { observeCompanyDescriptionUseCase() } returns flowOf("Description")
         every { observeEventNameUseCase() } returns flowOf("Event")
+        coEvery { observePincodeUseCase() } returns flowOf(null)
 
         viewModel = ConfigurationViewModel(
             observeCompanyNameUseCase,
             observeCompanyLogoUseCase,
             observeCompanyDescriptionUseCase,
             observeEventNameUseCase,
+            observePincodeUseCase,
             updateCompanyNameUseCase,
             updateCompanyLogoUseCase,
             updateCompanyDescriptionUseCase,
             updateEventNameUseCase,
+            updatePincodeUseCase,
             contextProvider
         )
 

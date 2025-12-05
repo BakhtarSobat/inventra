@@ -4,10 +4,10 @@ class UpdateEventNameUseCase(
     private val updateConfigUseCase: UpdateConfigUseCase
 ) {
     suspend operator fun invoke(value: String) {
-        updateConfigUseCase(KEY, value)
+        updateConfigUseCase(KEY_EVENT, value)
     }
 
-    private companion object {
-        private const val KEY = "event_name"
+    internal companion object {
+        internal const val KEY_EVENT = "event_name"
     }
 }

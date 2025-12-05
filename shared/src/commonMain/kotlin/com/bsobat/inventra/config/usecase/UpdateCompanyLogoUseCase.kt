@@ -4,10 +4,10 @@ class UpdateCompanyLogoUseCase(
     private val updateConfigUseCase: UpdateConfigUseCase
 ) {
     suspend operator fun invoke(value: String?) {
-        updateConfigUseCase(KEY, value)
+        updateConfigUseCase(KEY_LOGO, value)
     }
 
-    private companion object {
-        private const val KEY = "company_logo"
+    internal companion object {
+        const val KEY_LOGO = "company_logo"
     }
 }

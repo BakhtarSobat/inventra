@@ -27,12 +27,14 @@ import com.bsobat.inventra.config.usecase.ObserveCompanyLogoUseCase
 import com.bsobat.inventra.config.usecase.ObserveCompanyNameUseCase
 import com.bsobat.inventra.config.usecase.ObserveConfigUseCase
 import com.bsobat.inventra.config.usecase.ObserveEventNameUseCase
+import com.bsobat.inventra.config.usecase.ObservePincodeUseCase
 import com.bsobat.inventra.config.usecase.RemoveConfigUseCase
 import com.bsobat.inventra.config.usecase.UpdateCompanyDescriptionUseCase
 import com.bsobat.inventra.config.usecase.UpdateCompanyLogoUseCase
 import com.bsobat.inventra.config.usecase.UpdateCompanyNameUseCase
 import com.bsobat.inventra.config.usecase.UpdateConfigUseCase
 import com.bsobat.inventra.config.usecase.UpdateEventNameUseCase
+import com.bsobat.inventra.config.usecase.UpdatePincodeUseCase
 import com.bsobat.inventra.data.repository.BasketRepository
 import com.bsobat.inventra.data.repository.BasketRepositoryImpl
 import com.bsobat.inventra.data.repository.CategoryRepository
@@ -201,7 +203,9 @@ val dataModule = module {
     factory { UpdateCompanyDescriptionUseCase(get()) }
     factory { ObserveEventNameUseCase(get()) }
     factory { UpdateEventNameUseCase(get()) }
+    factory { ObservePincodeUseCase(get()) }
+    factory { UpdatePincodeUseCase(get()) }
 
     // Other Use Cases
-    single { AdminPinCheckUseCase() }
+    single { AdminPinCheckUseCase(observePincodeUseCase = get()) }
 }

@@ -4,10 +4,10 @@ class UpdateCompanyDescriptionUseCase(
     private val updateConfigUseCase: UpdateConfigUseCase
 ) {
     suspend operator fun invoke(value: String) {
-        updateConfigUseCase(KEY, value)
+        updateConfigUseCase(KEY_COMPANY_DESCRIPTION, value)
     }
 
-    private companion object {
-        private const val KEY = "company_description"
+    internal companion object {
+        const val KEY_COMPANY_DESCRIPTION = "company_description"
     }
 }
