@@ -1,17 +1,25 @@
-# �� Inventra
+# Inventra
 
 > **Inventra** — an offline-first, open-source inventory and sales tracker built with Kotlin Multiplatform.
 
 ---
 
-## �� About
+## About
 
 Inventra helps **small vendors**, **event sellers**, and **home businesses** manage products, stock, and sales — even without internet.  
 It supports **QR payments**, **tax tracking**, and **custom API integration** for syncing data when online.
 
 Built with **Kotlin Multiplatform (KMP)** and **Compose Multiplatform**, Inventra brings a modern, fast, and flexible experience to Android, Desktop, and future platforms.
 
+## Screenshots
+
+![Inventory List](./1.png)
+![Product Details](./2.png)
+![Sales Overview](./3.png)
+
 ---
+
+
 
 ## ✨ Key Features
 
@@ -26,7 +34,7 @@ Built with **Kotlin Multiplatform (KMP)** and **Compose Multiplatform**, Inventr
 
 ---
 
-## �� Architecture
+## Architecture
 
 | Layer | Technology |
 |--------|-------------|
@@ -42,7 +50,7 @@ The app follows a **Clean Architecture + MVVM** structure, ensuring testability 
 
 ---
 
-## �� Data Model Overview
+## Data Model Overview
 
 ```
 Category → Product → Offer → Sale → Payment
@@ -54,7 +62,7 @@ Category → Product → Offer → Sale → Payment
 
 ---
 
-## �� Payments
+## Payments
 
 - Supports multiple payment methods: `cash`, `card`, `qr`, `other`
 - QR payments are generated offline (EPC standard)
@@ -83,7 +91,7 @@ All credentials and settings are stored locally and encrypted.
 
 ---
 
-## �� Tech Highlights
+## Tech Highlights
 
 - Kotlin Multiplatform Shared Logic
 - Compose Multiplatform UI
@@ -95,7 +103,7 @@ All credentials and settings are stored locally and encrypted.
 
 ---
 
-## �� Roadmap
+## Roadmap
 
 | Version | Features |
 |----------|-----------|
@@ -106,7 +114,7 @@ All credentials and settings are stored locally and encrypted.
 
 ---
 
-## �� Development Setup
+## Development Setup
 
 ### Prerequisites
 - Android Studio Ladybug+
@@ -131,7 +139,7 @@ All credentials and settings are stored locally and encrypted.
 
 ---
 
-## ��‍�� Contributing
+## Contributing
 
 Contributions are welcome!  
 Fork the repo, create a feature branch, and submit a PR.
@@ -143,13 +151,13 @@ Please ensure:
 
 ---
 
-## �� License
+## License
 
 This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
 
 ---
 
-### �� About the Name
+### About the Name
 
 **Inventra** = *Inventory* + *Infra* (infrastructure).  
 A platform-independent, offline-first toolkit for managing what matters most — your stock, sales, and flow.
