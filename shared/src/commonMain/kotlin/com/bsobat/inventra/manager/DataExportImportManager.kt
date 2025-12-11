@@ -4,16 +4,13 @@ import com.inventra.database.InventraDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
 import okio.SYSTEM
-import okio.buffer
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.toString
 
 @Serializable
 data class ExportData(
@@ -27,10 +24,10 @@ data class ExportData(
     val paymentParts: List<PaymentPartExport>,
     val inventoryTransactions: List<InventoryTransactionExport>,
     val paymentMethods: List<PaymentMethodExport>,
-    val configurations: List<ConfigurationExport>, // Add this
     val exportTimestamp: String,
-    val imageFiles: List<String>
-)
+    val imageFiles: List<String>,
+    val configurations: List<ConfigurationExport> = emptyList(),
+    )
 
 @Serializable
 data class ConfigurationExport(
@@ -149,7 +146,7 @@ class DataExportImportManager(
     }
 
     @OptIn(ExperimentalTime::class)
-    private suspend fun collectAllData(): ExportData {
+    private fun collectAllData(): ExportData {
         val imageFiles = mutableSetOf<String>()
 
         val categories = database.categoryQueries.exportAllCategories().executeAsList().map {
@@ -218,7 +215,7 @@ class DataExportImportManager(
         return tempPath
     }
 
-    private suspend fun importData(data: ExportData) {
+    private fun importData(data: ExportData) {
         database.transaction {
             database.saleQueries.deleteAllSales()
             database.inventoryTransactionQueries.deleteAll()

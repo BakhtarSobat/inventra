@@ -1,5 +1,6 @@
 package com.bsobat.inventra.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bsobat.inventra.basket.usecase.ObserveBasketItemsUseCase
@@ -17,7 +18,11 @@ class MainActivityViewModel(
 
     val basketItemsFlow = observeBasketItemsUseCase()
     suspend fun export(path: String) = dataExportImportManager.exportToZip(path)
-    suspend fun import(path: String) = dataExportImportManager.importFromZip(path)
+    suspend fun import(path: String){
+        dataExportImportManager.importFromZip(path).onFailure {
+            Log.e("Import", "import failed", it)
+        }
+    }
     fun onAdminPinCheck(pin: String) {
         viewModelScope.launch {
             adminPinCheckUseCase(pin)
