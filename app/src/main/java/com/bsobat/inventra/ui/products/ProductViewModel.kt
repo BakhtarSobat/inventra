@@ -75,7 +75,6 @@ class ProductsViewModel(
             try {
                 product.image = copyImageToInternalStorage(product, inputParams)
                 addProductUseCase(product, inputParams.categoryId)
-                loadProducts(inputParams)
             } catch (e: Exception) {
                 _uiState.value = ProductsUiState.Error(e.message ?: "Failed to add product")
             }
@@ -87,7 +86,6 @@ class ProductsViewModel(
             try {
                 product.image = copyImageToInternalStorage(product, category)
                 updateProductUseCase(product)
-                loadProducts(category)
             } catch (e: Exception) {
                 _uiState.value = ProductsUiState.Error(e.message ?: "Failed to update product")
             }
@@ -116,7 +114,6 @@ class ProductsViewModel(
                 inputParams.categoryId?.let {
                     removeProductFromCategoryUseCase(product.productId, inputParams.categoryId)
                 }
-                loadProducts(inputParams)
             } catch (e: Exception) {
                 _uiState.value = ProductsUiState.Error(e.message ?: "Failed to delete product")
             }

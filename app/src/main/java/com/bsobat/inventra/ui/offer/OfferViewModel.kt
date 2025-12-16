@@ -75,7 +75,6 @@ class OfferViewModel(
             try {
                 offer.image = copyImageToInternalStorage(offer, product)
                 addOfferUseCase(offer)
-                loadOffersByProduct(product)
             } catch (e: Exception) {
                 _uiState.value = OffersUiState.Error(e.message ?: "Failed to add offer")
             }
@@ -88,7 +87,6 @@ class OfferViewModel(
             try {
                 offer.image = copyImageToInternalStorage(offer, product)
                 updateOfferUseCase(offer)
-                loadOffersByProduct(product)
             } catch (e: Exception) {
                 _uiState.value = OffersUiState.Error(e.message ?: "Failed to update offer")
             }
@@ -109,7 +107,6 @@ class OfferViewModel(
         viewModelScope.launch {
             try {
                 deleteOfferUseCase(offer.offerId)
-                loadOffersByProduct(product)
             } catch (e: Exception) {
                 _uiState.value = OffersUiState.Error(e.message ?: "Failed to delete offer")
             }

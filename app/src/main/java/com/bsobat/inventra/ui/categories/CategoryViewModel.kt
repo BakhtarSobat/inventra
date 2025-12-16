@@ -45,7 +45,7 @@ class CategoryViewModel(
     private fun observeCategories() {
         viewModelScope.launch {
             getCategories().collectLatest { list ->
-                _uiState.value = CategoryUiState.Success(list)
+                _uiState.value = CategoryUiState.Success(list.sortedBy { it.title })
             }
         }
     }

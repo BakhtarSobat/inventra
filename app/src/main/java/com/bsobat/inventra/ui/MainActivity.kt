@@ -1,13 +1,17 @@
 package com.bsobat.inventra.ui
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
@@ -45,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.FileProvider
 import com.bsobat.inventra.R
 import com.bsobat.inventra.data.model.BasketItem
 import com.bsobat.inventra.theme.AppTheme
@@ -56,6 +61,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import kotlin.io.path.createTempFile
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +70,8 @@ class MainActivity : ComponentActivity() {
         setContent { App() }
     }
 }
+
+private const val BACK_UP_FILE = "inventra_backup.zip"
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
@@ -81,21 +89,9 @@ fun App(viewModel: MainActivityViewModel = koinViewModel()) {
 
     // Export file picker
     val exportLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/zip")
-    ) { uri: Uri? ->
-        uri?.let {
-            scope.launch {
-                context.contentResolver.openOutputStream(it)?.use { outputStream ->
-                    val tempFile = kotlin.io.path.createTempFile().toFile()
-                    viewModel.export(tempFile.absolutePath).onSuccess {
-                        tempFile.inputStream().use { input ->
-                            input.copyTo(outputStream)
-                        }
-                        tempFile.delete()
-                    }
-                }
-            }
-        }
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+
     }
 
     // Import file picker
@@ -153,14 +149,21 @@ fun App(viewModel: MainActivityViewModel = koinViewModel()) {
                                 text = { Text(stringResource(R.string.export)) },
                                 onClick = {
                                     showMenu.value = false
-                                    exportLauncher.launch("inventra_backup_${System.currentTimeMillis()}.zip")
+                                    scope.launch {
+                                        export(viewModel, context, exportLauncher)
+                                    }
                                 }
                             )
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.import_data)) },
                                 onClick = {
                                     showMenu.value = false
-                                    importLauncher.launch(arrayOf("application/zip"))
+                                    importLauncher.launch(
+                                        arrayOf(
+                                            "application/zip",
+                                            "application/x-zip-compressed"
+                                        )
+                                    )
                                 }
                             )
                             DropdownMenuItem(
@@ -204,7 +207,7 @@ fun App(viewModel: MainActivityViewModel = koinViewModel()) {
         }
     }
 
-    if(showConfigDialog){
+    if (showConfigDialog) {
         showConfigDialog = false
         scope.launch {
             navigator.navigateTo(
@@ -213,6 +216,41 @@ fun App(viewModel: MainActivityViewModel = koinViewModel()) {
             )
         }
     }
+}
+
+
+private suspend fun export(
+    viewModel: MainActivityViewModel,
+    context: Context,
+    exportLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
+) {
+
+    val tempFile = createTempFile(suffix = ".zip").toFile()
+    viewModel.export(tempFile.absolutePath).onSuccess {
+        val uri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            tempFile
+        )
+
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "application/zip"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                BACK_UP_FILE
+            )
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        val chooserIntent = Intent.createChooser(
+            shareIntent,
+            "Share backup file"
+        )
+        exportLauncher.launch(chooserIntent)
+    }
+
 }
 
 @Composable
