@@ -77,8 +77,17 @@ fun App(viewModel: MainActivityViewModel = koinViewModel()) {
     var showPinDialog by remember { mutableStateOf(false) }
     val adminRight by viewModel.adminLoggedIn.collectAsState()
     var showConfigDialog by remember { mutableStateOf(false) }
+    val syncState by viewModel.syncState.collectAsState()
+    val isSignedIn = remember { mutableStateOf(viewModel.checkGoogleDriveSignInStatus()) }
 
-
+    val signInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.handleGoogleDriveSignInResult(result.data)
+            isSignedIn.value = true
+        }
+    }
     // Export file picker
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/zip")
@@ -169,6 +178,36 @@ fun App(viewModel: MainActivityViewModel = koinViewModel()) {
                                     showMenu.value = false
                                     showPinDialog = true
                                 }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        if (isSignedIn.value) {
+                                            stringResource(R.string.sync_with_google_drive)
+                                        } else {
+                                            stringResource(R.string.sign_in_to_google_drive)
+                                        }
+                                    )
+                                },
+                                onClick = {
+                                    showMenu.value = false
+                                    if (isSignedIn.value) {
+                                        viewModel.syncWithGoogleDrive()
+                                    } else {
+                                        viewModel.signInToGoogleDrive()?.let { intent ->
+                                            signInLauncher.launch(intent)
+                                        }
+                                    }
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.sign_out_from_google_drive)) },
+                                onClick = {
+                                    showMenu.value = false
+                                    viewModel.signOutFromGoogleDrive()
+                                    isSignedIn.value = false
+                                },
+                                enabled = isSignedIn.value
                             )
                         }
                     },

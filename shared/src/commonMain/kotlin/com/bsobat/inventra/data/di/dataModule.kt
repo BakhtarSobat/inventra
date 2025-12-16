@@ -40,6 +40,7 @@ import com.bsobat.inventra.data.repository.BasketRepositoryImpl
 import com.bsobat.inventra.data.repository.CategoryRepository
 import com.bsobat.inventra.data.repository.CategoryRepositoryImpl
 import com.bsobat.inventra.data.repository.ConfigurationRepository
+import com.bsobat.inventra.data.repository.ConfigurationRepositoryImpl
 import com.bsobat.inventra.data.repository.InventoryTransactionRepository
 import com.bsobat.inventra.data.repository.InventoryTransactionRepositoryImpl
 import com.bsobat.inventra.data.repository.OfferRepository
@@ -50,10 +51,12 @@ import com.bsobat.inventra.data.repository.ProductRepository
 import com.bsobat.inventra.data.repository.ProductRepositoryImpl
 import com.bsobat.inventra.data.repository.SaleRepository
 import com.bsobat.inventra.data.repository.SaleRepositoryImpl
-import com.bsobat.inventra.data.repository.ConfigurationRepositoryImpl
 import com.bsobat.inventra.domain.usecase.AdminPinCheckUseCase
 import com.bsobat.inventra.manager.CheckoutManager
 import com.bsobat.inventra.manager.DataExportImportManager
+import com.bsobat.inventra.manager.PlatformSyncDependencies
+import com.bsobat.inventra.manager.sync.CloudStorageProvider
+import com.bsobat.inventra.manager.sync.drive.GoogleDriveAuthManager
 import com.bsobat.inventra.offer.domain.usecase.AddOfferUseCase
 import com.bsobat.inventra.offer.domain.usecase.DeleteOfferUseCase
 import com.bsobat.inventra.offer.domain.usecase.GetOfferByIdUseCase
@@ -93,6 +96,15 @@ expect fun provideSqlDriver(context: ContextProvider): app.cash.sqldelight.db.Sq
 expect fun provideAppFilesDir(context: ContextProvider): String
 
 val dataModule = module {
+    single { PlatformSyncDependencies(contextProvider = get()) }
+
+    // Cloud provider
+    single { GoogleDriveAuthManager(
+        contextProvider = get(),
+        dataExportImportManager = get(),
+        platformDependencies = get()
+    ) }
+
     single { provideSqlDriver(get()) }
     single { InventraDatabase(get()) }
 

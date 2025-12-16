@@ -40,6 +40,8 @@ kotlin {
                 implementation(libs.datetime)
 
                 implementation(libs.okio)
+                implementation(libs.dropbox.core.sdk)
+
             }
         }
         val androidUnitTest by getting {
@@ -56,6 +58,10 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.android)
                 implementation(libs.sqldelight.android)
+
+                implementation(libs.google.play.services.auth)
+                implementation(libs.google.api.client.android)
+                implementation(libs.google.api.services.drive)
             }
         }
 //        val iosMain by creating {

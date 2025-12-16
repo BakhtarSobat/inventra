@@ -35,7 +35,8 @@ val mainModule = module {
         MainActivityViewModel(
             dataExportImportManager = get(),
             observeBasketItemsUseCase = get(),
-            adminPinCheckUseCase = get()
+            adminPinCheckUseCase = get(),
+            authManager = get()
         )
     }
 

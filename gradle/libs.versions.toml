@@ -4,6 +4,7 @@ android-minSdk = "24"
 android-targetSdk = "36"
 agp = "8.9.3"
 androidx-navigation = "2.8.9"
+dropboxCoreSdk = "7.0.0"
 navigation3 = "1.0.0-alpha03"
 kotlin = "2.2.21"
 coreKtx = "1.17.0"
@@ -26,9 +27,16 @@ okio = "3.16.4"
 zipline = "1.14.1"
 mockk = "1.14.6"
 turbine = "1.2.1"
+googlePlayServices = "21.4.0"
+googleApiClient = "2.8.1"
+googleDrive = "v3-rev20220815-2.0.0"
 
 
 [libraries]
+dropbox-core-sdk = { module = "com.dropbox.core:dropbox-core-sdk", version.ref = "dropboxCoreSdk" }
+google-play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "googlePlayServices" }
+google-api-client-android = { module = "com.google.api-client:google-api-client-android", version.ref = "googleApiClient" }
+google-api-services-drive = { module = "com.google.apis:google-api-services-drive", version.ref = "googleDrive" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }

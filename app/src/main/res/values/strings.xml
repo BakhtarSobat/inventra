@@ -56,4 +56,7 @@
     <string name="label_company_description">Company description</string>
     <string name="label_event_name">Event name</string>
     <string name="configuration">Settings</string>
+    <string name="sync_with_google_drive">Sync with cloud</string>
+    <string name="sign_in_to_google_drive">Sign to sync</string>
+    <string name="sign_out_from_google_drive">Sign out from Cloud</string>
 </resources>
