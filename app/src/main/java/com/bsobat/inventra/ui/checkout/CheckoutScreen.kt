@@ -100,7 +100,7 @@ fun CheckoutScreen(
                     } catch (_: ActivityNotFoundException) {
                         showToast(context, context.getString(R.string.error_no_app_found))
                     }
-                    onCheckoutComplete(effect.saleId)
+
                 }
 
             }

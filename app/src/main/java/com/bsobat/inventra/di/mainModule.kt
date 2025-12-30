@@ -61,7 +61,8 @@ val mainModule = module {
             savePaymentMethodConfigUseCase = get(),
             adminPinCheckUseCase = get(),
             clearBasketUseCase = get(),
-            deletePaymentMethodUseCase = get()
+            deletePaymentMethodUseCase = get(),
+            companyNameUseCase = get(),
         )
     }
     viewModel {

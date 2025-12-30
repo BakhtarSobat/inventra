@@ -11,6 +11,7 @@ import com.bsobat.inventra.checkout.usecase.DeletePaymentMethodUseCase
 import com.bsobat.inventra.checkout.usecase.ObservePaymentMethodsUseCase
 import com.bsobat.inventra.checkout.usecase.ProcessCheckoutUseCase
 import com.bsobat.inventra.checkout.usecase.SavePaymentMethodConfigUseCase
+import com.bsobat.inventra.config.usecase.ObserveCompanyNameUseCase
 import com.bsobat.inventra.data.model.BasketItem
 import com.bsobat.inventra.data.model.PaymentMethod
 import com.bsobat.inventra.data.model.PaymentPart
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 sealed interface CheckoutUiState {
@@ -59,9 +61,7 @@ sealed interface CheckoutEvent {
 
 sealed interface CheckoutEffect {
     data class CheckoutSuccess(val saleId: String) : CheckoutEffect
-    data class CheckoutOnlinePaymentRequired(val saleId: String, val paymentUrl: String) :
-        CheckoutEffect
-
+    data class CheckoutOnlinePaymentRequired(val paymentUrl: String) : CheckoutEffect
     data class CheckoutError(val message: String) : CheckoutEffect
 }
 
@@ -76,6 +76,7 @@ class CheckoutViewModel(
     private val adminPinCheckUseCase: AdminPinCheckUseCase,
     private val clearBasketUseCase: ClearBasketUseCase,
     private val deletePaymentMethodUseCase: DeletePaymentMethodUseCase,
+    private val companyNameUseCase: ObserveCompanyNameUseCase
 ) : ViewModel() {
 
     private val _selectedPaymentMethod = MutableStateFlow<PaymentMethod?>(null)
@@ -83,7 +84,7 @@ class CheckoutViewModel(
     private val _effect = MutableSharedFlow<CheckoutEffect>()
     val adminLoggedIn: StateFlow<Boolean> = adminPinCheckUseCase.adminLoggedIn
     private val _uiState: MutableStateFlow<CheckoutUiState> =
-        MutableStateFlow<CheckoutUiState>(CheckoutUiState.Loading)
+        MutableStateFlow(CheckoutUiState.Loading)
     val uiState: StateFlow<CheckoutUiState> = _uiState.asStateFlow()
 
     private val _paymentMethodState: MutableStateFlow<PaymentMethodUiState> =
@@ -132,7 +133,7 @@ class CheckoutViewModel(
     fun onEvent(event: CheckoutEvent) {
         when (event) {
             is CheckoutEvent.SelectPaymentMethod -> {
-                _selectedPaymentMethod.value = event.paymentMethod
+                handlePaymentSelection(event)
             }
 
             is CheckoutEvent.ProcessCheckout -> {
@@ -141,6 +142,24 @@ class CheckoutViewModel(
 
             is CheckoutEvent.ClearError -> {
                 // Error clearing handled by UI
+            }
+        }
+    }
+
+    private fun handlePaymentSelection(event: CheckoutEvent.SelectPaymentMethod) {
+
+        viewModelScope.launch {
+            _selectedPaymentMethod.value = event.paymentMethod
+            val currentState = uiState.value
+            if (currentState !is CheckoutUiState.Success) return@launch
+            val selectedMethod = event.paymentMethod
+            if (selectedMethod is PaymentMethod.Online) {
+                if (currentState.basketItems.isEmpty()) return@launch
+                _effect.emit(
+                    CheckoutEffect.CheckoutOnlinePaymentRequired(
+                        paymentUrl = selectedMethod.getPaymentUrl(currentState.total, companyNameUseCase().firstOrNull())
+                    )
+                )
             }
         }
     }
@@ -172,14 +191,7 @@ class CheckoutViewModel(
                 eventId = null
             ).fold(
                 onSuccess = { saleId ->
-                    val value = when (selectedMethod) {
-                        is PaymentMethod.Cash -> CheckoutEffect.CheckoutSuccess(saleId)
-                        is PaymentMethod.Online -> CheckoutEffect.CheckoutOnlinePaymentRequired(
-                            saleId = saleId,
-                            paymentUrl = selectedMethod.getPaymentUrl(currentState.total)
-                        )
-                    }
-                    _effect.emit(value)
+                    _effect.emit(CheckoutEffect.CheckoutSuccess(saleId))
                     clearBasketUseCase()
                 },
                 onFailure = { exception ->
