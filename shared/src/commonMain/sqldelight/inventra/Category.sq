@@ -13,7 +13,7 @@ selectCategoryById:
 SELECT * FROM category WHERE categoryId = ?;
 
 insertCategory:
-INSERT INTO category (categoryId, title, description, image, taxPercentage)
+INSERT OR REPLACE INTO category (categoryId, title, description, image, taxPercentage)
 VALUES (?, ?, ?, ?, ?);
 
 updateCategory:

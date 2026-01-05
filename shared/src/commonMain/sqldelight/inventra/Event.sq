@@ -16,5 +16,5 @@ exportAllEvents:
 SELECT * FROM event;
 
 insertEvent:
-INSERT INTO event(eventId, title, description, startDate, endDate)
+INSERT OR REPLACE INTO event(eventId, title, description, startDate, endDate)
 VALUES (?, ?, ?, ?, ?);

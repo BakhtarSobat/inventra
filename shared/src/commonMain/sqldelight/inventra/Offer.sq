@@ -24,7 +24,7 @@ selectLowStockOffers:
 SELECT * FROM offer WHERE amountInInventory <= ?;
 
 insertOffer:
-INSERT INTO offer (offerId, productId, title, image, amountInInventory, type, price, uom, taxPercentage)
+INSERT OR REPLACE INTO offer (offerId, productId, title, image, amountInInventory, type, price, uom, taxPercentage)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 updateOffer:

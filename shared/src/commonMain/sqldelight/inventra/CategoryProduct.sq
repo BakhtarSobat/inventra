@@ -17,7 +17,7 @@ JOIN category_product cp ON p.productId = cp.productId
 WHERE cp.categoryId = ?;
 
 insertCategoryProduct:
-INSERT INTO category_product (categoryId, productId) VALUES (?, ?);
+INSERT OR REPLACE INTO category_product (categoryId, productId) VALUES (?, ?);
 
 deleteCategoryProduct:
 DELETE FROM category_product WHERE categoryId = ? AND productId = ?;

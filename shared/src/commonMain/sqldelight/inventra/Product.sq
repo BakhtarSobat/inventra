@@ -14,7 +14,7 @@ selectProductById:
 SELECT * FROM product WHERE productId = ?;
 
 insertProduct:
-INSERT INTO product (productId, title, description, image, skuCode, barcode)
+INSERT OR REPLACE INTO product (productId, title, description, image, skuCode, barcode)
 VALUES (?, ?, ?, ?, ?, ?);
 
 updateProduct:
