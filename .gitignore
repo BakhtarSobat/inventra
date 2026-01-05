@@ -17,3 +17,4 @@ local.properties
 .kotlin
 shared/build
 shared/build
+*.dm
